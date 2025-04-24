@@ -1,0 +1,205 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster | Unleash Your Knowledge</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+    <div class="full-screen-container">
+        <div id="particles-js"></div>
+        <div class="app-container">
+            <header class="app-header">
+                <h1><i class="fas fa-brain animate-icon"></i> QuizMaster</h1>
+                <p class="tagline">Unleash your knowledge, dominate the leaderboard!</p>
+            </header>
+
+            <main class="quiz-container">
+                <!-- Role Selection Screen -->
+                <section id="role-screen" class="quiz-section active">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">
+                            <i class="fas fa-users animate-icon"></i>
+                        </div>
+                        <h2>Welcome to QuizMaster!</h2>
+                        <p>Please select your role to proceed.</p>
+                        <div class="role-buttons">
+                            <button id="teacher-btn" class="btn btn-primary animate-btn">
+                                <i class="fas fa-chalkboard-teacher"></i> Teacher
+                            </button>
+                            <button id="student-btn" class="btn btn-secondary animate-btn">
+                                <i class="fas fa-user-graduate"></i> Student
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Teacher Question Adding Screen -->
+                <section id="teacher-screen" class="quiz-section">
+                    <div class="welcome-card">
+                        <h2>Add Questions for Your Quiz</h2>
+                        <form id="teacher-form" class="teacher-form">
+                            <div class="input-group">
+                                <label for="num-questions">Number of Questions:</label>
+                                <input type="number" id="num-questions" min="1" max="10" value="1" required>
+                            </div>
+                            <div id="questions-container"></div>
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="text" id="teacher-passcode" placeholder="Set quiz passcode" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary animate-btn">
+                                <i class="fas fa-save"></i> Save Questions
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Start Screen (for Students) -->
+                <section id="start-screen" class="quiz-section">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">
+                            <i class="fas fa-question-circle animate-icon"></i>
+                        </div>
+                        <h2>Ready to Conquer the Quiz?</h2>
+                        <p>Test your skills with 10 thrilling questions!</p>
+                        <form id="username-form" class="username-form">
+                            <div class="input-group">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="username-input" placeholder="Enter your name" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="text" id="passcode-input" placeholder="Enter quiz passcode" required>
+                            </div>
+                            <button type="submit" id="start-btn" class="btn btn-primary animate-btn">
+                                <i class="fas fa-play"></i> Start Quiz
+                            </button>
+                        </form>
+                    </div>
+                    <div class="leaderboard-preview">
+                        <h3><i class="fas fa-trophy animate-icon"></i> Hall of Fame</h3>
+                        <div class="preview-loading">
+                            <div class="loading-spinner"></div>
+                            Loading leaderboard...
+                        </div>
+                        <table id="preview-leaderboard" class="hide">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <button id="view-full-leaderboard" class="btn btn-secondary animate-btn leaderboard-btn">
+                            <i class="fas fa-chart-bar"></i> View Full Leaderboard
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Question Screen -->
+                <section id="question-screen" class="quiz-section">
+                    <div class="question-header">
+                        <div class="progress-container">
+                            <span id="progress">Question 1/10</span>
+                            <div id="progress-bar" class="progress-bar"></div>
+                        </div>
+                        <span id="timer" class="timer">45</span>
+                    </div>
+                    <div class="question-card">
+                        <div class="category" id="category">General</div>
+                        <h2 id="question" class="fade-in">Loading question...</h2>
+                        <div id="answer-buttons" class="answer-grid"></div>
+                        <button id="next-btn" class="btn btn-primary animate-btn hide">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button id="hint-btn" class="btn btn-secondary animate-btn hide">
+                            Hint <i class="fas fa-lightbulb"></i>
+                        </button>
+                        <audio id="correct-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-gentle-bell-chime-316.mp3"></audio>
+                        <audio id="wrong-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-sad-game-over-trombone-471.mp3"></audio>
+                        <audio id="complete-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-gentle-harp-flourish-2087.mp3"></audio>
+                        <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-soft-click-1128.mp3"></audio>
+                        <audio id="background-music" src="https://assets.mixkit.co/music/preview/mixkit-serene-and-calm-ambiance-958.mp3" loop></audio>
+                    </div>
+                </section>
+
+                <!-- Results Screen -->
+                <section id="results-screen" class="quiz-section">
+                    <div class="results-card">
+                        <div class="results-icon">
+                            <i class="fas fa-trophy animate-icon"></i>
+                        </div>
+                        <h2>Quiz Completed!</h2>
+                        <p>Your Score: <span id="score">0</span>/10</p>
+                        <button id="save-score-btn" class="btn btn-primary animate-btn">
+                            <i class="fas fa-save"></i> Save Score
+                        </button>
+                        <button id="view-leaderboard" class="btn btn-secondary animate-btn">
+                            <i class="fas fa-chart-bar"></i> View Leaderboard
+                        </button>
+                        <button id="restart-quiz" class="btn btn-secondary animate-btn">
+                            <i class="fas fa-redo"></i> Play Again
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Leaderboard Screen -->
+                <section id="leaderboard-screen" class="quiz-section">
+                    <div class="leaderboard-card">
+                        <h2><i class="fas fa-trophy animate-icon"></i> Leaderboard</h2>
+                        <table id="leaderboard">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <button id="back-to-quiz" class="btn btn-secondary animate-btn">
+                            <i class="fas fa-arrow-left"></i> Back to Quiz
+                        </button>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="app-footer">
+                <p>© 2025 QuizMaster | Crafted with <i class="fas fa-heart animate-icon"></i> by Team Quadro</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script>
+        // Initialize Particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 100, density: { enable: true, value_area: 800 } },
+                color: { value: ['#6366f1', '#93c5fd', '#22c55e'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.6, random: true },
+                size: { value: 4, random: true },
+                line_linked: { enable: false },
+                move: { enable: true, speed: 3, direction: 'none', random: true }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                modes: { grab: { distance: 150, line_linked: { opacity: 0.5 } }, push: { particles_nb: 5 } }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+</html>
