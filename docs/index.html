@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        /* Prevent text selection on mobile for better touch interaction */
+        .btn, .btn-option {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
 </head>
 <body>
     <div class="full-screen-container">
@@ -185,13 +194,13 @@
         // Initialize Particles.js
         particlesJS('particles-js', {
             particles: {
-                number: { value: 100, density: { enable: true, value_area: 800 } },
+                number: { value: 50, density: { enable: true, value_area: 800 } },
                 color: { value: ['#6366f1', '#93c5fd', '#22c55e'] },
                 shape: { type: 'circle' },
                 opacity: { value: 0.6, random: true },
-                size: { value: 4, random: true },
+                size: { value: 3, random: true },
                 line_linked: { enable: false },
-                move: { enable: true, speed: 3, direction: 'none', random: true }
+                move: { enable: true, speed: 2, direction: 'none', random: true }
             },
             interactivity: {
                 detect_on: 'canvas',

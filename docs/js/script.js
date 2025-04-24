@@ -213,7 +213,7 @@ usernameForm.addEventListener('submit', async (e) => {
         console.log('Questions loaded:', questions);
         startScreen.classList.remove('active');
         questionScreen.classList.add('active');
-        backgroundMusic.play(); // Start background music
+        backgroundMusic.play();
         startQuiz();
     } catch (error) {
         console.error('Fetch error:', error.message);
@@ -247,6 +247,11 @@ function showQuestion() {
         button.textContent = option;
         button.classList.add('btn', 'btn-option');
         button.addEventListener('click', () => {
+            clickSound.play();
+            selectAnswer(button, option, question.correct_answer);
+        });
+        button.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             clickSound.play();
             selectAnswer(button, option, question.correct_answer);
         });
@@ -324,8 +329,40 @@ hintBtn.addEventListener('click', () => {
         alert('No hints remaining!');
     }
 });
+hintBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    clickSound.play();
+    if (hintsRemaining > 0) {
+        const question = questions[currentQuestionIndex];
+        if (question.hint) {
+            alert(`Hint: ${question.hint}`);
+            hintsRemaining--;
+            if (hintsRemaining === 0) {
+                hintBtn.classList.add('hide');
+            }
+        }
+    } else {
+        alert('No hints remaining!');
+    }
+});
 
 nextBtn.addEventListener('click', () => {
+    clickSound.play();
+    currentQuestionIndex++;
+    if (currentQuestionIndex < totalQuestions) {
+        showQuestion();
+    } else {
+        questionScreen.classList.remove('active');
+        resultsScreen.classList.add('active');
+        scoreText.textContent = `${score}/${totalQuestions}`;
+        completeSound.play();
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+        launchConfetti();
+    }
+});
+nextBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     clickSound.play();
     currentQuestionIndex++;
     if (currentQuestionIndex < totalQuestions) {
@@ -361,12 +398,28 @@ saveScoreBtn.addEventListener('click', async () => {
         alert('Failed to save score: Network or server error');
     }
 });
+saveScoreBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    clickSound.play();
+    saveScoreBtn.click();
+});
 
 viewLeaderboardBtn.addEventListener('click', () => {
     clickSound.play();
     showLeaderboard();
 });
+viewLeaderboardBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    clickSound.play();
+    showLeaderboard();
+});
+
 viewFullLeaderboardBtn.addEventListener('click', () => {
+    clickSound.play();
+    showLeaderboard();
+});
+viewFullLeaderboardBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     clickSound.play();
     showLeaderboard();
 });
@@ -376,8 +429,20 @@ backToQuizBtn.addEventListener('click', () => {
     leaderboardScreen.classList.remove('active');
     startScreen.classList.add('active');
 });
+backToQuizBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    clickSound.play();
+    leaderboardScreen.classList.remove('active');
+    startScreen.classList.add('active');
+});
 
 restartBtn.addEventListener('click', () => {
+    clickSound.play();
+    resultsScreen.classList.remove('active');
+    startScreen.classList.add('active');
+});
+restartBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     clickSound.play();
     resultsScreen.classList.remove('active');
     startScreen.classList.add('active');
@@ -443,17 +508,19 @@ async function loadLeaderboardPreview() {
 }
 
 function launchConfetti() {
+    const isMobile = window.innerWidth <= 600;
     confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: isMobile ? 50 : 100,
+        spread: isMobile ? 50 : 70,
         origin: { y: 0.6 }
     });
 }
 
 function launchConfettiForAnswer() {
+    const isMobile = window.innerWidth <= 600;
     confetti({
-        particleCount: 50,
-        spread: 40,
+        particleCount: isMobile ? 30 : 50,
+        spread: isMobile ? 30 : 40,
         origin: { y: 0.8 }
     });
 }
